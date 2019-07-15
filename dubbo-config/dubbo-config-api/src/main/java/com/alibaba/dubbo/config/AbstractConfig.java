@@ -89,6 +89,16 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
+    /**
+     * 获取系统配置 并设置到config中
+     *
+     * @author yuhyj
+     * @date 2019/7/12 14:17
+     * @since
+     * @param config
+     * @return void
+     * @throws
+     */
     protected static void appendProperties(AbstractConfig config) {
         if (config == null) {
             return;
@@ -98,6 +108,7 @@ public abstract class AbstractConfig implements Serializable {
         for (Method method : methods) {
             try {
                 String name = method.getName();
+                // 1.set形式的方法 获取系统变量set进去
                 if (name.length() > 3 && name.startsWith("set") && Modifier.isPublic(method.getModifiers())
                         && method.getParameterTypes().length == 1 && isPrimitive(method.getParameterTypes()[0])) {
                     String property = StringUtils.camelToSplitName(name.substring(3, 4).toLowerCase() + name.substring(4), ".");
@@ -172,6 +183,12 @@ public abstract class AbstractConfig implements Serializable {
         appendParameters(parameters, config, null);
     }
 
+    /**
+     * 将config的数据转换为key-value map的形式
+     * @param parameters
+     * @param config
+     * @param prefix
+     */
     @SuppressWarnings("unchecked")
     protected static void appendParameters(Map<String, String> parameters, Object config, String prefix) {
         if (config == null) {
